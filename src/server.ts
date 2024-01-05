@@ -87,20 +87,20 @@ app.post(
   '/webhooks',
   catchAsync((req, res) => {
     const hash = crypto
-      .createHmac('sha512', process.env.WEBHOOK_SECRET_KEY)
+      .createHmac('sha512', ENVIRONMENT.DB.URL)
       .update(JSON.stringify(req.body))
       .digest('hex');
     console.log(req.headers['X-Bloc-Webhook']);
     if (hash !== req.headers['X-Bloc-Webhook'])
       throw new AppError('The bloc hash is invalid', 400);
     const event = req.body;
-    return AppResponse(res,200,  event, 'Webhook retrieval successful');
+    return AppResponse(res, 200, event, 'Webhook retrieval successful');
   })
 );
 /**
  * Bootstrap server
  */
 app.listen(port, () => {
-  initializeDB()
   console.log('=> ' + appName + ' app listening on port ' + port + '!');
+  initializeDB();
 });

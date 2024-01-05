@@ -1,6 +1,6 @@
 import timeout from 'connect-timeout';
-import { ENVIRONMENT } from '../config/environment ';
-import { logger } from './logger ';
+import { ENVIRONMENT } from '../config/environment';
+import { logger } from './logger';
 
 /**
  * Wraps an async function to handle errors.
@@ -65,7 +65,4 @@ export const handleError = (err, req, res, next) => {
 /**
  * Timeout middleware
  */
-export const timeoutMiddleware = timeout({
-  time: 1000 * 60,
-  message: 'Request timeout'
-});
+export const timeoutMiddleware = timeout(60000);
