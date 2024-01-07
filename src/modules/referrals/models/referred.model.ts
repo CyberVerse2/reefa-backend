@@ -11,8 +11,8 @@ import {
   JoinColumn,
   OneToOne
 } from 'typeorm';
-import { Campaign } from '@/modules/campaign/campaign.model';
-import { BaseUser } from '@/common/abstract/base-user.model';
+import { Campaign } from '../../../modules/campaign/campaign.model';
+import { BaseUser } from '../../../common/abstract/base-user.model';
 import { ReferrerCampaignStats } from './referrer-campaign-stats.model';
 
 @Entity()

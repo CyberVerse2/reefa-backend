@@ -25,6 +25,7 @@ import {v4 as nanoid} from 'uuid';
 import { User } from '../user/user.model';
 import { Referrer } from '../referrals/models/referrer.model';
 import { Referred } from '../referrals/models/referred.model';
+import { generateRandomString } from 'src/common/utils/helper';
 
 @Entity()
 export class Campaign {
@@ -81,6 +82,6 @@ export class Campaign {
 
   @BeforeInsert()
   generateId() {
-    this.id = nanoid();
+    this.id = generateRandomString();
   }
 }

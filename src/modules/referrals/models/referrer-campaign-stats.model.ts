@@ -13,8 +13,7 @@ import {
 } from 'typeorm';
 import { IsEmail, IsFQDN, IsNotEmpty, MinLength } from 'class-validator';
 import { hash } from 'bcryptjs';
-import { Campaign } from '@/modules/campaign/campaign.model';
-import { BaseUser } from '@/common/abstract/base-user.model';
+import { Campaign } from '../../../modules/campaign/campaign.model';
 import { Referred } from './referred.model';
 import { Referrer } from './referrer.model';
 import { Referral } from './referral.model';

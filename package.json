@@ -8,11 +8,15 @@
     "start-prod": "node build/server.js",
     "build": "tsc",
     "dev": "nodemon",
-    "watch": "tsc --watch & nodemon build/index.js",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/src/common/confi/gdb.ts",
+    "typeorm:generate-migration": "npm run typeorm -- -d ./src/common/config/db.ts migration:generate ./src/common/migrations/user",
+    "typeorm:create-migration": "npm run typeorm -- migration:create ./src/common/migrations/$npm_config_name",
+    "typeorm:revert-migration": "npm run typeorm -- -d ./src/common/config/db.ts migration:revert"
   },
   "author": "",
   "license": "ISC",
@@ -42,6 +46,7 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/bcryptjs": "^2.4.5",
+    "@types/compression": "^1.7.5",
     "@types/connect-timeout": "^0.0.37",
     "@types/cookie-parser": "^1.4.6",
     "@types/cors": "^2.8.14",

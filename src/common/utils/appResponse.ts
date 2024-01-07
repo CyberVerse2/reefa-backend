@@ -8,7 +8,7 @@ export function AppResponse(
 ) {
   res.status(statusCode).json({
     status: 'success',
-    data: data ?? null,
-    message: message ?? 'Success'
+    message: message ?? 'Success',
+    data: data ?? null
   });
 }

@@ -1,12 +1,11 @@
 import { ENVIRONMENT } from './common/config/environment';
+import { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import AppError from './common/utils/appError';
 import api from './api';
 import rateLimit from 'express-rate-limit';
 import {
-  catchAsync,
   handleError,
-  timeoutMiddleware
 } from './common/utils/errorHandler';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -16,11 +15,12 @@ import { stream } from './common/utils/logger';
 import morgan from 'morgan';
 import { AppResponse } from './common/utils/appResponse';
 import { initializeDB } from './common/config/db';
-
+import { catchAsync } from './common/utils/catchAsync';
+import timeout from 'connect-timeout';
 /**
  * Default app configurations
  */
-const app = express();
+const app = express()
 const port = ENVIRONMENT.APP.PORT;
 const appName = ENVIRONMENT.APP.NAME;
 
@@ -32,7 +32,8 @@ app.use(cors());
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.disable('x-powered-by');
-app.use(compression);
+const timeoutMiddleware = timeout(60000);
+// app.use(compression);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -62,7 +63,7 @@ app.use('/api/v1', api);
 // catch 404 and forward to error handler
 app.all(
   '*',
-  catchAsync(async (req, res) => {
+  catchAsync(async (req: Request) => {
     throw new AppError('route not found', 404);
   })
 );
@@ -85,7 +86,7 @@ app.get('*', (req, res) =>
 
 app.post(
   '/webhooks',
-  catchAsync((req, res) => {
+  catchAsync(async (req: Request, res: Response) => {
     const hash = crypto
       .createHmac('sha512', ENVIRONMENT.DB.URL)
       .update(JSON.stringify(req.body))
@@ -97,6 +98,7 @@ app.post(
     return AppResponse(res, 200, event, 'Webhook retrieval successful');
   })
 );
+
 /**
  * Bootstrap server
  */

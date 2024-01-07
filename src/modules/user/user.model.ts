@@ -6,22 +6,17 @@ import {
   BeforeInsert,
   OneToMany
 } from 'typeorm';
-import {
-  IsEmail,
-  IsFQDN,
-  IsNotEmpty,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsFQDN, IsNotEmpty, MinLength } from 'class-validator';
 import { hash } from 'bcrypt';
 import { Campaign } from '../campaign/campaign.model';
-import { BaseUser } from '@/common/abstract/base-user.model';
+import { BaseUser } from '../../common/abstract/base-user.model';
 
 @Entity()
 export class User extends BaseUser {
-  @Column()
+  @Column({ nullable: true })
   businessName!: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsFQDN(undefined, {
     message: 'Social Link must be a site link eg instagram, facebook'
   })
@@ -30,15 +25,15 @@ export class User extends BaseUser {
   @OneToMany(() => Campaign, (campaign) => campaign.userId)
   campaigns!: Campaign[];
 
-  @Column()
+  @Column({ nullable: true })
   @IsFQDN()
-  photo!: string;
+  photo?: string;
 
-  @Column()
+  @Column({ nullable: true })
   @MinLength(10, { message: 'A account number must be 10 digits minimum' })
   accountNumber!: number;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
   @MinLength(8, { message: 'password should be at least 8 characters long' })
   password!: string;
@@ -46,7 +41,7 @@ export class User extends BaseUser {
   @Column()
   isTermsAndConditionAccepted!: boolean;
 
-  @Column()
+  @Column({ default: false })
   isDeleted!: boolean;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })

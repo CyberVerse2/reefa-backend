@@ -1,18 +1,12 @@
-import timeout from 'connect-timeout';
 import { ENVIRONMENT } from '../config/environment';
 import { logger } from './logger';
+import { QueryFailedError } from 'typeorm';
+import AppError from './appError';
 
-/**
- * Wraps an async function to handle errors.
- *
- * @param {function} fn - The async function to be wrapped.
- * @return {function} - The wrapped function.
- */
-export const catchAsync = (fn) => {
-  return (req, res, next) => {
-    fn(req, res, next).catch((err) => next(err));
-  };
-};
+
+function handleQueryFailedError(err: QueryFailedError) {
+  return new AppError(err.message, 400)
+}
 
 /**
  * Error handler
@@ -23,6 +17,7 @@ export const handleError = (err, req, res, next) => {
   err.data = err.data || null;
 
   const { statusCode, message, data } = err;
+  // console.log(err.detail);
 
   logger.error(
     `${statusCode} - ${message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
@@ -43,6 +38,9 @@ export const handleError = (err, req, res, next) => {
       message: message ?? 'resource not found'
     });
   }
+  if (err instanceof QueryFailedError) {
+    err = handleQueryFailedError(err);
+  }
 
   if (ENVIRONMENT.APP.ENV === 'local') {
     console.log('==== Error ==== : ', err.stack);
@@ -61,8 +59,3 @@ export const handleError = (err, req, res, next) => {
     message: message
   });
 };
-
-/**
- * Timeout middleware
- */
-export const timeoutMiddleware = timeout(60000);

@@ -6,7 +6,7 @@ export abstract class BaseUser {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ unique: true })
+  @Column({ nullable: true })
   name!: string;
 
   @Column({ unique: true })
