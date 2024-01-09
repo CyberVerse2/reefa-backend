@@ -7,6 +7,7 @@ import { Campaign } from '../campaign/campaign.model';
 import { compareData } from 'src/common/utils/helper';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { UpdateResult } from 'typeorm';
+import { validate } from 'class-validator';
 
 export async function findUser(
   value: string,
@@ -28,9 +29,8 @@ export async function updateUser(
   details: QueryDeepPartialEntity<User>
 ): Promise<UpdateResult> {
   const userRepository = Reefa.getRepository(User);
+  const errors = await validate(details);
+  console.log(errors)
   const updatedUser = await userRepository.update({ id }, details);
-  console.log(updatedUser)
-  const user = await userRepository.findOneBy({ id });
-  console.log(user)
   return updatedUser;
 }

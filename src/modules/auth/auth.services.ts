@@ -3,9 +3,10 @@ import AppError from './../../common/utils/appError';
 import { ENVIRONMENT } from '../../common/configs/environment';
 import { Reefa } from '../../common/configs/db';
 import { User } from '../user/user.model';
-import { compareData } from 'src/common/utils/helper';
+import { compareData, validateEntity } from 'src/common/utils/helper';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { UpdateResult } from 'typeorm';
+import { validate } from 'class-validator';
 
 export async function findUser(
   value: string,
@@ -31,6 +32,7 @@ export async function createNewUser(
     password,
     isTermsAndConditionAccepted
   });
+  await validateEntity(newUser);
   await userRepository.save(newUser);
 
   return newUser;
@@ -48,4 +50,3 @@ export async function loginUser(email: string, password: string) {
 
   return authenticatedUser;
 }
-

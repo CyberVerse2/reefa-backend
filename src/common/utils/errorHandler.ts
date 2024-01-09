@@ -2,11 +2,15 @@ import { ENVIRONMENT } from '../configs/environment';
 import { logger } from './logger';
 import { QueryFailedError } from 'typeorm';
 import AppError from './appError';
+import { ValidationError } from 'class-validator';
 
 function handleQueryFailedError(err: QueryFailedError) {
   return new AppError(err.message, 400);
 }
 
+function handleValidationError(err: ValidationError) {
+  return new AppError(err.value, 400);
+}
 /**
  * Error handler
  */
@@ -35,10 +39,12 @@ export const handleError = (err, req, res, next) => {
       success: false,
       data: null,
       message: message ?? 'resource not found'
-    });
+  });
   }
-  if (err instanceof QueryFailedError) {
-    err = handleQueryFailedError(err);
+  if (err instanceof QueryFailedError) err = handleQueryFailedError(err);
+  if (err instanceof ValidationError) {
+    console.log('error dey validation')
+    err = handleValidationError(err);
   }
 
   if (ENVIRONMENT.APP.ENV === 'local') {

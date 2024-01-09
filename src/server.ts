@@ -1,5 +1,6 @@
+import 'reflect-metadata';
 import { ENVIRONMENT } from './common/configs/environment';
-import './common/interfaces/authRequest'
+import './common/interfaces/authRequest';
 import { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import AppError from './common/utils/appError';

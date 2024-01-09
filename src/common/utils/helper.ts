@@ -3,6 +3,8 @@ import { randomBytes } from 'crypto';
 import { ENVIRONMENT } from '../configs/environment';
 import jwt from 'jsonwebtoken';
 import { CookieOptions, Response } from 'express';
+import { ValidationError, validate } from 'class-validator';
+import AppError from './appError';
 
 export const generateRandomString = (): string => {
   return randomBytes(10).toString('hex');
@@ -41,4 +43,11 @@ export const setCookie = (
     sameSite: 'none',
     ...options
   });
+};
+
+export const validateEntity = async (entity: any) => {
+    const errors = await validate(entity, {
+      ValidationError: { target: false, value: false }
+    });
+    if(errors.length > 0) return errors
 };

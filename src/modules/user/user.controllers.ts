@@ -14,22 +14,26 @@ const httpGetCurrentUser = catchAsync(async (req: Request, res: Response) => {
 
   return AppResponse(res, 200, currentUser, 'User found');
 });
-export const httpGetCampaigns = catchAsync(async (req:Request, res:Response) => {
-  const { user } = req;
-  const currentCampaign = await getUserCampaigns(user.id!);
-  console.log(currentCampaign);
-  return AppResponse(
-    res,
-    200,
-    currentCampaign,
-    'Campaigns retrieved succesfully'
-  );
-});
+export const httpGetCampaigns = catchAsync(
+  async (req: Request, res: Response) => {
+    const { user } = req;
+    const currentCampaign = await getUserCampaigns(user.id!);
+    if (!currentCampaign) {
+      return AppResponse(res, 400, null, 'No campaigns found for this user');
+    }
+    console.log(currentCampaign);
+    return AppResponse(
+      res,
+      200,
+      currentCampaign,
+      'Campaigns retrieved succesfully'
+    );
+  }
+);
 const httpUpdateUser = catchAsync(async (req: Request, res: Response) => {
   const { user } = req;
   const { username, email, socialLink, accountNumber, businessName } =
     req.body || null;
-  console.log(email);
   const details = {
     username,
     email,
@@ -38,10 +42,7 @@ const httpUpdateUser = catchAsync(async (req: Request, res: Response) => {
     businessName
   };
   const updatedUser = await updateUser(user.id!, details);
-  console.log(updatedUser);
-  return res
-    .status(200)
-    .json({ message: 'User updated succesfully', data: updatedUser });
+  return AppResponse(res, 200, updatedUser, 'User updated successfully');
 });
 
 const httpDeleteUser = catchAsync(async (req: Request, res: Response) => {
