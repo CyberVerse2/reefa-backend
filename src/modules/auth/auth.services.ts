@@ -1,12 +1,18 @@
 import jwt from 'jsonwebtoken';
 import AppError from './../../common/utils/appError';
-import { ENVIRONMENT } from './../../common/config/environment';
-import { Reefa } from './../../common/config/db';
+import { ENVIRONMENT } from '../../common/configs/environment';
+import { Reefa } from '../../common/configs/db';
 import { User } from '../user/user.model';
+import { compareData } from 'src/common/utils/helper';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { UpdateResult } from 'typeorm';
 
-export async function findUser(email: string): Promise<User | null> {
+export async function findUser(
+  value: string,
+  field: string
+): Promise<User | null> {
   const userRepository = Reefa.getRepository(User);
-  const existingUser = await userRepository.findOneBy({ email });
+  const existingUser = await userRepository.findOneBy({ [field]: value });
   return existingUser;
 }
 
@@ -15,7 +21,7 @@ export async function createNewUser(
   password: string,
   isTermsAndConditionAccepted: boolean
 ) {
-  const user = await findUser(email);
+  const user = await findUser(email, 'email');
   if (user) {
     throw new AppError('User already exists', 409);
   }
@@ -30,24 +36,26 @@ export async function createNewUser(
   return newUser;
 }
 
-// async function loginUser(ownerEmail) {
-//   console.log(ownerEmail, password);
-//   const authenticatedUser = await findUser(ownerEmail);
-//   console.log(authenticatedUser);
-//   if (
-//     authenticatedUser.length === 0 &&
-//     authenticatedUser.password !== password
-//   ) {
-//     throw new AppError('User does not exist. Please register an account');
-//   }
-//   const token = jwt.sign(
-//     { userId: authenticatedUser.owner_id },
-//     process.env.COOKIE_SECRET_KEY,
-//     {
-//       expiresIn: '24h'
-//     }
-//   );
-//   return token;
-// }
+export async function loginUser(email: string, password: string) {
+  const authenticatedUser = await findUser(email, 'email');
+  console.log(authenticatedUser);
+  if (!authenticatedUser) {
+    throw new AppError('User not found', 404);
+  }
+  const isValidUser = await compareData(password, authenticatedUser.password);
+  console.log(isValidUser)
+  if (!isValidUser) {
+    throw new AppError('The password is incorrect', 401);
+  }
 
-// export { createNewUser, loginUser };
+  return authenticatedUser;
+}
+
+export async function updateUser(
+  id: string,
+  details: QueryDeepPartialEntity<User>
+): Promise<UpdateResult> {
+  const userRepository = Reefa.getRepository(User);
+  const updatedUser = await userRepository.update({ id }, details);
+  return updatedUser;
+}

@@ -1,12 +1,10 @@
-import { ENVIRONMENT } from './common/config/environment';
+import { ENVIRONMENT } from './common/configs/environment';
 import { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import AppError from './common/utils/appError';
 import api from './api';
 import rateLimit from 'express-rate-limit';
-import {
-  handleError,
-} from './common/utils/errorHandler';
+import { handleError } from './common/utils/errorHandler';
 import cors from 'cors';
 import helmet from 'helmet';
 import crypto from 'crypto';
@@ -14,13 +12,14 @@ import compression from 'compression';
 import { stream } from './common/utils/logger';
 import morgan from 'morgan';
 import { AppResponse } from './common/utils/appResponse';
-import { initializeDB } from './common/config/db';
+import { initializeDB } from './common/configs/db';
 import { catchAsync } from './common/utils/catchAsync';
 import timeout from 'connect-timeout';
+import cookieParser from 'cookie-parser';
 /**
  * Default app configurations
  */
-const app = express()
+const app = express();
 const port = ENVIRONMENT.APP.PORT;
 const appName = ENVIRONMENT.APP.NAME;
 
@@ -29,6 +28,7 @@ const appName = ENVIRONMENT.APP.NAME;
  */
 app.use(helmet());
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.disable('x-powered-by');

@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-
 /**
  * Wraps an async function to handle errors.
  *

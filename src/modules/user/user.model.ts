@@ -41,6 +41,9 @@ export class User extends BaseUser {
   @Column()
   isTermsAndConditionAccepted!: boolean;
 
+  @Column({ nullable: true })
+  refreshToken!: string;
+
   @Column({ default: false })
   isDeleted!: boolean;
 

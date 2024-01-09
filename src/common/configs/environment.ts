@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { IEnvironment } from '../interfaces/environment';
+import { IEnvironment } from '../interfaces/Ienvironment';
 dotenv.config();
 
 export const ENVIRONMENT: IEnvironment = {
@@ -22,4 +22,7 @@ export const ENVIRONMENT: IEnvironment = {
   EMAIL: {
     API_KEY: process.env.RESEND_API_KEY!
   },
+  CACHE_REDIS: {
+    URL: process.env.REDIS_URL!
+  }
 };

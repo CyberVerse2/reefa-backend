@@ -1,11 +1,10 @@
-import { ENVIRONMENT } from '../config/environment';
+import { ENVIRONMENT } from '../configs/environment';
 import { logger } from './logger';
 import { QueryFailedError } from 'typeorm';
 import AppError from './appError';
 
-
 function handleQueryFailedError(err: QueryFailedError) {
-  return new AppError(err.message, 400)
+  return new AppError(err.message, 400);
 }
 
 /**
