@@ -4,7 +4,6 @@ import { ENVIRONMENT } from '../configs/environment';
 import jwt from 'jsonwebtoken';
 import { CookieOptions, Response } from 'express';
 
-
 export const generateRandomString = (): string => {
   return randomBytes(10).toString('hex');
 };
@@ -25,11 +24,16 @@ export const signData = (data: object, secret: string, expiresIn: string) => {
   });
 };
 
-export const decodeData = async (token: string, secret: string) => {
+export const decodeData = (token: string, secret: string) => {
   return jwt.verify(token, secret);
 };
 
-export const setCookie = (res: Response, name: string, value: string, options?:CookieOptions) => {
+export const setCookie = (
+  res: Response,
+  name: string,
+  value: string,
+  options: CookieOptions = {}
+) => {
   res.cookie(name, value, {
     httpOnly: true,
     secure: ENVIRONMENT.APP.ENV === 'production',

@@ -19,7 +19,7 @@ export const Reefa = new DataSource({
     ReferrerCampaignStats
   ],
   migrations: [`src\common\migrations/*.ts`],
-  synchronize: ENVIRONMENT.APP.ENV === 'local' ? true : false
+  synchronize: false
 });
 
 export function initializeDB() {

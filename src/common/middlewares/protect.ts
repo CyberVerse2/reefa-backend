@@ -4,21 +4,18 @@ import type { NextFunction, Request, Response } from 'express';
 import { setCookie } from '../utils/helper';
 import { ENVIRONMENT } from '../configs/environment';
 
-export interface AuthRequest extends Request {
-  user?: { id: string };
-}
-
 export const protect = catchAsync(
-  async (req: AuthRequest, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken, refreshToken } = req.cookies;
-    const { currentUser, accessToken: reefaAccessToken } = await authenticate(
+    const { currentUser, newAccessToken } = await authenticate(
       accessToken,
       refreshToken
     );
-    if (reefaAccessToken) {
-      setCookie(res, 'accessToken', accessToken, {
-        maxAge: parseInt(ENVIRONMENT.JWT_EXPIRES_IN.ACCESS)
-      });
+    // console.log(currentUser);
+    // console.log(newAccessToken)
+    if (newAccessToken) {
+      setCookie(res, 'accessToken', newAccessToken, { maxAge: 15 * 60 * 1000 });
+      console.log(newAccessToken, 'cookie was created');
     }
     if (currentUser) {
       req.user = { id: currentUser.id };

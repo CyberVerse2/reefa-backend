@@ -19,13 +19,11 @@ import {
   MaxLength,
   IsEnum
 } from 'class-validator';
-import { RewardType } from './campaigns.constants';
-// import { nanoid } from 'nanoid';
-import {v4 as nanoid} from 'uuid';
+import { RewardType, BusinessCategory } from './campaigns.constants';
 import { User } from '../user/user.model';
 import { Referrer } from '../referrals/models/referrer.model';
 import { Referred } from '../referrals/models/referred.model';
-import { generateRandomString } from 'src/common/utils/helper';
+import { randomBytes } from 'crypto';
 
 @Entity()
 export class Campaign {
@@ -49,6 +47,14 @@ export class Campaign {
     message: 'A campaign description should have a maximum of 255 characters'
   })
   description!: string;
+
+  @IsEnum(BusinessCategory)
+  @Column({
+    type: 'enum',
+    enum: BusinessCategory,
+    default: BusinessCategory.Other
+  })
+  category!: BusinessCategory;
 
   @Column({ type: 'enum', enum: RewardType, default: RewardType.CASH })
   @IsEnum(RewardType, { message: 'Invalid reward type' })
@@ -82,6 +88,6 @@ export class Campaign {
 
   @BeforeInsert()
   generateId() {
-    this.id = generateRandomString();
+    this.id = randomBytes(10).toString('hex');
   }
 }

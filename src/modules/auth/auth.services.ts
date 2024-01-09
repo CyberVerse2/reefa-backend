@@ -38,12 +38,10 @@ export async function createNewUser(
 
 export async function loginUser(email: string, password: string) {
   const authenticatedUser = await findUser(email, 'email');
-  console.log(authenticatedUser);
   if (!authenticatedUser) {
     throw new AppError('User not found', 404);
   }
   const isValidUser = await compareData(password, authenticatedUser.password);
-  console.log(isValidUser)
   if (!isValidUser) {
     throw new AppError('The password is incorrect', 401);
   }
@@ -51,11 +49,3 @@ export async function loginUser(email: string, password: string) {
   return authenticatedUser;
 }
 
-export async function updateUser(
-  id: string,
-  details: QueryDeepPartialEntity<User>
-): Promise<UpdateResult> {
-  const userRepository = Reefa.getRepository(User);
-  const updatedUser = await userRepository.update({ id }, details);
-  return updatedUser;
-}

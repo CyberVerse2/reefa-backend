@@ -7,7 +7,7 @@ export abstract class BaseUser {
   id!: string;
 
   @Column({ nullable: true })
-  name!: string;
+  username!: string;
 
   @Column({ unique: true })
   @IsEmail()
