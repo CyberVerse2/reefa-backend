@@ -48,7 +48,7 @@ export class Campaign {
   })
   description!: string;
 
-  @IsEnum(BusinessCategory)
+  @IsEnum(BusinessCategory, {message: 'Invalid category'})
   @Column({
     type: 'enum',
     enum: BusinessCategory,

@@ -4,9 +4,16 @@ import {
   Column,
   CreateDateColumn,
   BeforeInsert,
-  OneToMany
+  OneToMany,
+  BeforeUpdate
 } from 'typeorm';
-import { IsEmail, IsFQDN, IsNotEmpty, MinLength, ValidateIf } from 'class-validator';
+import {
+  IsEmail,
+  IsFQDN,
+  IsNotEmpty,
+  MinLength,
+  ValidateIf
+} from 'class-validator';
 import { hash } from 'bcrypt';
 import { Campaign } from '../campaign/campaign.model';
 import { BaseUser } from '../../common/abstract/base-user.model';
@@ -20,7 +27,6 @@ export class User extends BaseUser {
   @IsFQDN(undefined, {
     message: 'Social Link must be a site link eg instagram, facebook'
   })
-  @ValidateIf((object, value) => value !== undefined)
   socialLink!: string;
 
   @OneToMany(() => Campaign, (campaign) => campaign.userId)
@@ -28,12 +34,10 @@ export class User extends BaseUser {
 
   @Column({ nullable: true })
   @IsFQDN()
-  @ValidateIf((object, value) => value !== undefined)
   photo?: string;
 
   @Column({ nullable: true })
   @MinLength(10, { message: 'A account number must be 10 digits minimum' })
-  @ValidateIf((object, value) => value !== undefined)
   accountNumber!: number;
 
   @Column({ nullable: true })
@@ -54,6 +58,7 @@ export class User extends BaseUser {
   lastLogin!: Date;
 
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     if (this.password) {
       this.password = await hash(this.password, 10);

@@ -4,14 +4,16 @@ import { createNewUser, loginUser } from './auth.services';
 import { updateUser } from '../user/user.services';
 import { Request, Response } from 'express';
 import { AppResponse } from '../../common/utils/appResponse';
-import { setCookie, signData } from 'src/common/utils/helper';
+import { setCookie, signData, validateEntity } from 'src/common/utils/helper';
 import { ENVIRONMENT } from 'src/common/configs/environment';
 import { EntityTransformer } from 'src/common/transformers/entityTransformer';
+import { SignupDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
 
 export const httpCreateNewUser = catchAsync(
   async (req: Request, res: Response) => {
     const { email, password, isTermsAndConditionAccepted } = req.body;
-    console.log(email);
+    await validateEntity(new SignupDto(req.body));
     if (!(email && password && isTermsAndConditionAccepted)) {
       throw new AppError('Please provide the required fields', 400);
     }
@@ -27,6 +29,7 @@ export const httpCreateNewUser = catchAsync(
 
 export const httpLoginUser = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  await validateEntity(new LoginDto(req.body));
   if (!email && !password) {
     throw new AppError('email and password required');
   }

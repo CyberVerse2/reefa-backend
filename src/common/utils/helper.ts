@@ -45,9 +45,23 @@ export const setCookie = (
   });
 };
 
-export const validateEntity = async (entity: any) => {
-    const errors = await validate(entity, {
-      ValidationError: { target: false, value: false }
+export const validateEntiy = async (entity: any) => {
+  const errors = await validate(entity);
+  if (errors.length > 0) return errors;
+};
+
+export const validateEntity = async (dto: any) => {
+  const errors = await validate(dto);
+
+  if (errors.length > 0) {
+    const errorMap: string[] = [];
+
+    errors.forEach((item) => {
+      for (const constraint of Object.values(item.constraints!)) {
+        errorMap.push(constraint);
+      }
     });
-    if(errors.length > 0) return errors
+
+    throw new AppError('Validation error', 400, errorMap);
+  }
 };

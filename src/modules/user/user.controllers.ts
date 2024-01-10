@@ -3,6 +3,8 @@ import { findUser, updateUser, getUserCampaigns } from './user.services';
 import { Request, Response } from 'express';
 import { catchAsync } from 'src/common/utils/catchAsync';
 import { AppResponse } from 'src/common/utils/appResponse';
+import { UpdateUserDto } from './dto/update.dto';
+import { validateEntity } from 'src/common/utils/helper';
 
 const httpGetCurrentUser = catchAsync(async (req: Request, res: Response) => {
   const { user } = req;
@@ -41,6 +43,12 @@ const httpUpdateUser = catchAsync(async (req: Request, res: Response) => {
     accountNumber,
     businessName
   };
+  type NonNullableObject<T> = {
+    [K in keyof T]: NonNullable<T[K]>;
+  };
+  const nonNullableDetails: NonNullableObject<typeof details> = details;
+  await validateEntity(new UpdateUserDto(nonNullableDetails));
+
   const updatedUser = await updateUser(user.id!, details);
   return AppResponse(res, 200, updatedUser, 'User updated successfully');
 });
