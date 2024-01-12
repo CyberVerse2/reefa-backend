@@ -1,63 +1,61 @@
-// import axios from 'axios';
-// import { createPaymentLink } from './campaign.utils';
+import axios from 'axios';
+import { createPaymentLink } from './campaign.utils';
+import { Campaign } from './campaign.model';
+import { Reefa } from 'src/common/configs/db';
+import { findUser } from '../user/user.services';
+import AppError from 'src/common/utils/appError';
+import { BusinessCategory, RewardType } from './campaigns.constants';
+import { DeepPartial, UpdateResult } from 'typeorm';
+export async function getCampaignById(id: string): Promise<Campaign | null> {
+  const campaignRepository = await Reefa.getRepository(Campaign);
+  const userCampaigns = await campaignRepository.findOneBy({ id });
+  return userCampaigns;
+}
 
-// export async function getCampaigns(id: string): Promise<Campaign | null> {
-//   const campaignRepository = await Reefa.getRepository(Campaign);
-//   const userCampaigns = await campaignRepository.findOneBy({ id });
-//   return userCampaigns;
-// }
+export async function createCampaign({
+  userId,
+  name,
+  description,
+  category,
+  reward,
+  rewardAmount
+}: DeepPartial<Campaign>): Promise<Campaign> {
+  const currentUser = await findUser(<string>userId, 'id');
+  if (!currentUser)
+    throw new AppError(`This user creating the campaign doesn't exist`);
 
-// async function getCampaignById(id) {
-//   const campaigns = await query(
-//     'SELECT * FROM campaigns WHERE campaign_id=$1',
-//     [id]
-//   );
-//   checkDatabaseError();
-//   if (!campaigns) throw new NotFoundError('This campaign does not exist');
-//   console.log(campaigns);
-//   return campaigns;
-// }
+  const CampaignRepository = await Reefa.getRepository(Campaign);
+  const newCampaign = await CampaignRepository.create({
+    userId: currentUser,
+    name,
+    description,
+    category,
+    reward,
+    rewardAmount
+  });
+  await CampaignRepository.save(newCampaign)
+  if (!newCampaign) throw new AppError('Error in creating campaign. Please try again', 400)
+  
 
-// async function createCampaign(
-//   userId,
-//   name,
-//   description,
-//   campaignLink,
-//   paymentLink
-// ) {
-//   const currentUser = await getUser(userId);
-//   if (!currentUser) throw new NotFoundError('User details not found');
+  return newCampaign;
+}
 
-//   const campaignId = shortId();
-//   // const paymentLink = await createPaymentLink(
-//   //   userId,
-//   //   `${currentUser.owner_name}`
-//   // );
+export async function updateCampaign(
+  id: string,
+  details: DeepPartial<Campaign>
+): Promise<UpdateResult> {
+  const CampaignRepository = await Reefa.getRepository(Campaign);
+  const updatedCampaign = await CampaignRepository.update({ id }, details);
+  if (!updatedCampaign)
+    throw new AppError('Error in updating campaign. Please try again', 400);
+  return updatedCampaign;
+}
 
-//   if (!paymentLink) throw new AppError('Provide a payment link');
-
-//   const newCampaign = await query(
-//     `INSERT INTO campaigns(campaign_id, owner_id, campaign_name, campaign_description, reward_details, payment_link, campaign_link) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-//     [campaignId, userId, name, description, 'cash', paymentLink, campaignLink]
-//   );
-
-//   checkDatabaseError();
-
-//   console.log(newCampaign);
-//   return newCampaign;
-// }
-
-// async function deleteCampaign(id) {
-//   if (!id) {
-//     throw new AppError('Provide a campaign Id');
-//   }
-//   const deletedCampaign = await query(
-//     'DELETE FROM campaigns WHERE campaign_id=$1 RETURNING *',
-//     [id]
-//   );
-//   checkDatabaseError();
-//   if (!deletedCampaign) throw new NotFoundError(`Campaign doesn't exist`);
-//   return deletedCampaign;
-// }
-
-// export { getCampaigns, getCampaignById, createCampaign, deleteCampaign };
+export async function deleteCampaign(id: string) {
+  const CampaignRepository = await Reefa.getRepository(Campaign);
+  const deletedCampaign = await CampaignRepository.update({ id }, {
+    isDeleted: true
+  });
+  if (!deletedCampaign) throw new AppError('Error in deleting campaign', 400);
+  return deletedCampaign;
+}

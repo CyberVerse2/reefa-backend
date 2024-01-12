@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { getUser } from '../user/user.services ';
+import { findUser } from '../user/user.services';
 // import { decryptData } from '../globals/utils/encryptData.utils ';
 
-async function createPaymentLink(userId, name) {
-  const currentUser = await getUser(userId);
+async function createPaymentLink(userId: string, name) {
+  const currentUser = await findUser(userId, 'id');
   const blocSecretKeyHash = currentUser?.bloc_secret_key;
   const blocSecretKey = await decryptData(blocSecretKeyHash);
   let data = JSON.stringify({

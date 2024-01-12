@@ -28,6 +28,7 @@ export async function createNewUser(
     isTermsAndConditionAccepted
   });
   await userRepository.save(newUser);
+  if(!newUser) throw new AppError('Error in creating user. Please try again', 400)
 
   return newUser;
 }

@@ -48,7 +48,10 @@ export class Campaign {
   })
   description!: string;
 
-  @IsEnum(BusinessCategory, {message: 'Invalid category'})
+  @Column({ nullable: true })
+  photo?: string;
+
+  @IsEnum(BusinessCategory, { message: 'Invalid category' })
   @Column({
     type: 'enum',
     enum: BusinessCategory,
@@ -72,18 +75,18 @@ export class Campaign {
   @OneToMany(() => Referred, (referred) => referred.campaigns)
   referred!: Referred[];
 
-  @Column()
+  @Column({nullable: true})
   @IsFQDN()
   campaignLink!: string;
 
-  @Column()
+  @Column({nullable: true})
   @IsFQDN()
   paymentLink!: string;
 
   @Column({ default: true })
   active!: boolean;
 
-  @Column()
+  @Column({ default: false })
   isDeleted!: boolean;
 
   @BeforeInsert()

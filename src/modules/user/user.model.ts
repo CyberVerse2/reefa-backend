@@ -24,25 +24,18 @@ export class User extends BaseUser {
   businessName!: string;
 
   @Column({ nullable: true })
-  @IsFQDN(undefined, {
-    message: 'Social Link must be a site link eg instagram, facebook'
-  })
   socialLink!: string;
 
   @OneToMany(() => Campaign, (campaign) => campaign.userId)
   campaigns!: Campaign[];
 
   @Column({ nullable: true })
-  @IsFQDN()
   photo?: string;
 
   @Column({ nullable: true })
-  @MinLength(10, { message: 'A account number must be 10 digits minimum' })
   accountNumber!: number;
 
   @Column({ nullable: true })
-  @IsNotEmpty()
-  @MinLength(8, { message: 'password should be at least 8 characters long' })
   password!: string;
 
   @Column()

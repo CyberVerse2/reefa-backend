@@ -22,7 +22,6 @@ export const httpCreateNewUser = catchAsync(
       password,
       isTermsAndConditionAccepted
     );
-    console.log(newUser);
     return AppResponse(res, 200, newUser, 'User created successfully');
   }
 );

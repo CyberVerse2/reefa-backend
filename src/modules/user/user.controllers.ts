@@ -8,14 +8,11 @@ import { validateEntity } from 'src/common/utils/helper';
 
 const httpGetCurrentUser = catchAsync(async (req: Request, res: Response) => {
   const { user } = req;
-
   const currentUser = await findUser(user.id!, 'id');
-  if (!currentUser) {
-    throw new AppError('The user not found', 400);
-  }
-
   return AppResponse(res, 200, currentUser, 'User found');
 });
+
+
 export const httpGetCampaigns = catchAsync(
   async (req: Request, res: Response) => {
     const { user } = req;
@@ -23,7 +20,6 @@ export const httpGetCampaigns = catchAsync(
     if (!currentCampaign) {
       return AppResponse(res, 400, null, 'No campaigns found for this user');
     }
-    console.log(currentCampaign);
     return AppResponse(
       res,
       200,

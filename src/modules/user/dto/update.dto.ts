@@ -46,8 +46,7 @@ export class UpdateUserDto extends BaseDto {
   @IsUrl()
   @IsOptional()
   photo?: string;
-
-  @Column({ nullable: true })
+  
   @Min(1000000000, { message: 'A account number must be 10 digits minimum' })
   @Max(9999999999)
   @IsOptional()
