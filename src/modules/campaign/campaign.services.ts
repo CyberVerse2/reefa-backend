@@ -1,15 +1,16 @@
 import axios from "axios";
-import { createPaymentLink } from "./campaign.utils";
 import { Campaign } from "./campaign.model";
 import { Reefa } from "src/common/configs/db";
 import { findUser } from "../user/user.services";
 import AppError from "src/common/utils/appError";
 import { BusinessCategory, RewardType } from "./campaigns.constants";
 import { DeepPartial, UpdateResult } from "typeorm";
-export async function getCampaignById(id: string): Promise<Campaign | null> {
+
+
+export async function getCampaignById(id: string): Promise<Campaign> {
   const campaignRepository = Reefa.getRepository(Campaign);
   const userCampaigns = await campaignRepository.findOneBy({ id });
-  return userCampaigns;
+  return userCampaigns!;
 }
 
 export async function createCampaign({

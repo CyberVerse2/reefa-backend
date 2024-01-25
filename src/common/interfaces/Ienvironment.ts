@@ -28,6 +28,16 @@ export interface IEnvironment {
     REFRESH: string;
   };
   FRONTEND_URL?: string;
+  BLOC: {
+    TEST: {
+      SECRET_KEY: string;
+      PUBLIC_KEY: string;
+    };
+    LIVE: {
+      SECRET_KEY: string;
+      PUBLIC_KEY: string;
+    };
+  };
   AWS?: {
     ACCESS_KEY_ID: string;
     SECRET_ACCESS_KEY: string;

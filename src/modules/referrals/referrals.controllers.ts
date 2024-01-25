@@ -2,7 +2,7 @@ import { catchAsync } from 'src/common/utils/catchAsync';
 
 import {
   createNewReferrer,
-  getReferrerByCode,
+  getReferrerStatsByCode,
   getReferredById,
   createNewReferred,
   getReferrersByCampaign,
@@ -30,11 +30,12 @@ export const httpGetReferrerByCode = catchAsync(async (req, res) => {
   if (!code) {
     throw new AppError('Provide a referral Code');
   }
-  const referrersById = await getReferrerByCode(code);
+  const referrerStatsByCode = await getReferrerStatsByCode(code);
+  const referrer = referrerStatsByCode.user
   return AppResponse(
     res,
     200,
-    referrersById,
+    referrer,
     'Referrers based on referral code retrieved successfully'
   );
 });
@@ -90,10 +91,10 @@ export const httpGetReferredById = catchAsync(async (req, res) => {
 });
 
 export const httpCreateNewReferred = catchAsync(async (req, res) => {
-  const { campaignId, referralCode, name, email, amount } = req.body;
+  const { campaignId, referralCode, name, email, amount, isTermsAndConditionAccepted } = req.body;
   if (!(name && email && campaignId && amount)) {
     throw new AppError('name and email required');
   }
-  const newReferred = await createNewReferred(campaignId, name, email, amount, referralCode);
+  const newReferred = await createNewReferred(campaignId, name, email, amount, referralCode,isTermsAndConditionAccepted);
   return AppResponse(res, 201, newReferred, 'Registration of referred Successful');
 });

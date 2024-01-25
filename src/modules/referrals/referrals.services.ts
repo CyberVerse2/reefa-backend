@@ -7,6 +7,7 @@ import AppError from 'src/common/utils/appError';
 import { Referred } from './models/referred.model';
 import { Campaign } from '../campaign/campaign.model';
 import generateReferralCode from 'src/common/utils/generateReferralCodes';
+import { Referral } from './models/referral.model';
 
 export async function getReferrersByCampaign(id: string) {
   const campaign = await getCampaignById(id);
@@ -14,7 +15,7 @@ export async function getReferrersByCampaign(id: string) {
   return referrers ?? null;
 }
 
-export async function getReferrerByCode(code: string) {
+export async function getReferrerStatsByCode(code: string) {
   const referrerRepository = Reefa.getRepository(ReferrerCampaignStats);
   const referrer = await referrerRepository.findOneBy({ userCode: code });
   if (!referrer) throw new AppError('Referrer with this code not found', 404);
@@ -81,9 +82,14 @@ export async function createNewReferred(
   username: string,
   email: string,
   productPrice: number,
+  referralCode: string,
   isTermsAndConditionAccepted: boolean
 ): Promise<NewReferred> {
-  const currentCampaign = await getCampaignById(campaignId!);
+  const currentCampaign = await getCampaignById(campaignId);
+  const statsRepository = await Reefa.getRepository(ReferrerCampaignStats);
+  const stats = await getReferrerStatsByCode(referralCode);
+  if (!stats) throw new AppError('Referrer with the id was not found', 400);
+
   const referredRepository = Reefa.getRepository(Referred);
   const newReferred = referredRepository.create({
     username,
@@ -93,6 +99,8 @@ export async function createNewReferred(
   });
   currentCampaign?.referred.push(newReferred);
   await referredRepository.save(newReferred);
+  stats.referred = newReferred;
+  await statsRepository.save(stats);
   const body = {
     customer_email: email,
     customer_name: username,
@@ -104,6 +112,32 @@ export async function createNewReferred(
   return { ...newReferred, checkoutLink };
 }
 
-export async function updateReferralCount(referralCode) {}
+export async function updateReferralCount(ip: string, email: string): Promise<Referral> {
+  const referralCampaignStatsRepository = Reefa.getRepository(ReferrerCampaignStats);
+  const referredRepository = Reefa.getRepository(Referred);
+  const referred = await referredRepository.findOneBy({ email });
+  if (!referred) throw new AppError('The referred with this email was not found', 400);
 
-export async function validateReferral(email) {}
+  const stats = await referralCampaignStatsRepository.findOneBy({ referred });
+  if (!stats) throw new AppError('The referrer stats with this email was not found', 400);
+
+  const updatedReferralCampaignStats = await referralCampaignStatsRepository.update(
+    { referred },
+    {
+      invitesMade: stats.invitesMade + 1,
+      rewardsEarned: stats.rewardsEarned + 1,
+      verified: true
+    }
+  );
+
+  const referralRepository = Reefa.getRepository(Referral);
+  const newReferral = referralRepository.create({
+    campaign: stats.campaign,
+    referrer: stats.user,
+    referred: stats.referred,
+    referralCode: stats,
+    ipAddress: ip
+  });
+  await referralRepository.save(newReferral);
+  return newReferral;
+}

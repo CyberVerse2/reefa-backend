@@ -30,6 +30,7 @@ export function initializeDB() {
       ),
     )
     .catch((err) => {
+      console.log(err)
       console.error("Error During Data Source Initialization:", err);
       process.exit(1);
     });

@@ -33,7 +33,7 @@ export class Referral {
   referrer!: Referrer;
 
   @OneToOne(() => Referred)
-  @JoinColumn({ name: "referredId" })
+  @JoinColumn({ name: "referred" })
   referred!: Referred;
 
   @OneToOne(() => ReferrerCampaignStats)
@@ -42,9 +42,6 @@ export class Referral {
 
   @Column()
   ipAddress!: string;
-
-  @Column()
-  userAgent!: string;
 
   @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
