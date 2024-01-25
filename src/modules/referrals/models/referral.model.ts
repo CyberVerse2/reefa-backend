@@ -9,35 +9,35 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-  OneToOne
-} from 'typeorm';
-import { IsEmail, IsFQDN, IsNotEmpty, MinLength } from 'class-validator';
-import { hash } from 'bcryptjs';
-import { Campaign } from '../../../modules/campaign/campaign.model';
-import { BaseUser } from '../../../common/abstract/base-user.model';
-import { ReferrerCampaignStats } from './referrer-campaign-stats.model';
-import { Referrer } from './referrer.model';
-import { Referred } from './referred.model';
+  OneToOne,
+} from "typeorm";
+import { IsEmail, IsFQDN, IsNotEmpty, MinLength } from "class-validator";
+import { hash } from "bcryptjs";
+import { Campaign } from "../../../modules/campaign/campaign.model";
+import { BaseUser } from "../../../common/abstract/base-user.model";
+import { ReferrerCampaignStats } from "./referrer-campaign-stats.model";
+import { Referrer } from "./referrer.model";
+import { Referred } from "./referred.model";
 
-Entity()
+Entity();
 export class Referral {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id!: number;
 
   @OneToOne(() => Campaign)
-  @JoinColumn({name: "campaignId"})
+  @JoinColumn({ name: "campaignId" })
   campaign!: Campaign;
 
   @OneToOne(() => Referrer)
-  @JoinColumn({name: "referrerId"})
+  @JoinColumn({ name: "referrerId" })
   referrer!: Referrer;
 
   @OneToOne(() => Referred)
-  @JoinColumn({name: "referredId"})
+  @JoinColumn({ name: "referredId" })
   referred!: Referred;
 
   @OneToOne(() => ReferrerCampaignStats)
-  @JoinColumn({ name: 'referralCode' })
+  @JoinColumn({ name: "referralCode" })
   referralCode!: ReferrerCampaignStats;
 
   @Column()
@@ -46,9 +46,9 @@ export class Referral {
   @Column()
   userAgent!: string;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt!: Date;
 }

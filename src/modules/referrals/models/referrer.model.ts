@@ -10,15 +10,12 @@ import {
   ManyToOne,
   JoinColumn,
   OneToOne,
-  JoinTable
-} from 'typeorm';
-import { IsEmail, IsFQDN, IsNotEmpty, MinLength } from 'class-validator';
-import { hash } from 'bcryptjs';
-import { Campaign } from '../../../modules/campaign/campaign.model';
-import { BaseUser } from '../../../common/abstract/base-user.model';
-import { Referred } from './referred.model';
-import { Referral } from './referral.model';
-import { ReferrerCampaignStats } from './referrer-campaign-stats.model';
+  JoinTable,
+} from "typeorm";
+import { IsEmail, IsFQDN, IsNotEmpty, MinLength } from "class-validator";
+import { Campaign } from "../../../modules/campaign/campaign.model";
+import { BaseUser } from "../../../common/abstract/base-user.model";
+import { ReferrerCampaignStats } from "./referrer-campaign-stats.model";
 
 @Entity()
 export class Referrer extends BaseUser {
@@ -29,24 +26,27 @@ export class Referrer extends BaseUser {
   @OneToMany(() => ReferrerCampaignStats, (stats) => stats.user)
   stats!: ReferrerCampaignStats[];
 
-  @Column()
+  @Column({ nullable: true })
   @IsFQDN()
   photo!: string;
 
-  @Column()
+  @Column({ nullable: true })
   @IsNotEmpty()
-  @MinLength(8, { message: 'password should be at least 8 characters long' })
+  @MinLength(8, { message: "password should be at least 8 characters long" })
   password!: string;
 
   @Column()
   isTermsAndConditionAccepted!: boolean;
 
-  @Column()
+  @Column({ default: false })
+  isSuspended!: boolean;
+
+  @Column({ default: false })
   isDeleted!: boolean;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt!: Date;
 }

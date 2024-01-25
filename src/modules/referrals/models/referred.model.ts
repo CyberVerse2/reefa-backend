@@ -9,34 +9,37 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-  OneToOne
-} from 'typeorm';
-import { Campaign } from '../../../modules/campaign/campaign.model';
-import { BaseUser } from '../../../common/abstract/base-user.model';
-import { ReferrerCampaignStats } from './referrer-campaign-stats.model';
+  OneToOne,
+} from "typeorm";
+import { Campaign } from "../../../modules/campaign/campaign.model";
+import { BaseUser } from "../../../common/abstract/base-user.model";
+import { ReferrerCampaignStats } from "./referrer-campaign-stats.model";
 
 @Entity()
 export class Referred extends BaseUser {
   @ManyToOne(
     () => ReferrerCampaignStats,
-    (campaignStats) => campaignStats.userCode
+    (campaignStats) => campaignStats.userCode,
   )
-  @JoinColumn({ name: 'ReferrerCampaignStatsId' })
+  @JoinColumn({ name: "ReferrerCampaignStatsId" })
   referrerCode!: ReferrerCampaignStats;
 
   @ManyToOne(() => Campaign, (campaign) => campaign.referred)
-  @JoinColumn({ name: 'campaignId' })
+  @JoinColumn({ name: "campaignId" })
   campaigns!: Campaign;
+
+  @Column()
+  productPrice!: number;
 
   @Column()
   isTermsAndConditionAccepted!: boolean;
 
-  @Column()
+  @Column({ default: false })
   isDeleted!: boolean;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt!: Date;
 }

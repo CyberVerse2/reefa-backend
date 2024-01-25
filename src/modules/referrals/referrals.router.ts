@@ -1,27 +1,24 @@
-import { Router } from 'express';
+import { Router } from "express";
 
 import {
   httpCreateNewReferrer,
-  httpGetReferrers,
+  httpGetReferrerById,
+  httpGetReferrersByCampaign,
   httpGetReferrerByCode,
   httpCreateNewReferred,
-  httpGetReferred,
-  httpGetReferredById
-} from './referrals.controllers ';
-import authenticateUser from '../globals/middlewares/authenticateUser.middleware ';
+  httpGetReferredByCampaign,
+  httpGetReferredById,
+} from "./referrals.controllers";
 
 const referralsRouter = Router();
 
-// referralsRouter.post("/", httpGetReferrals);
-// referralsRouter.delete("/createReferral", httpCreateReferrals);
+referralsRouter.get("/referrers/:id", httpGetReferrerById);
+referralsRouter.post("/referrers/:code", httpGetReferrerByCode);
+referralsRouter.post("/referrers", httpGetReferrersByCampaign);
+referralsRouter.post("/referrer/create", httpCreateNewReferrer);
 
-referralsRouter.post('/referrers', authenticateUser, httpGetReferrers);
-referralsRouter.get('/referrers/:code', httpGetReferrerByCode);
-
-referralsRouter.post('/referred', authenticateUser, httpGetReferred);
-referralsRouter.get('/referred/:id', authenticateUser, httpGetReferredById);
-
-referralsRouter.post('/createReferrer', httpCreateNewReferrer);
-referralsRouter.post('/createReferred', httpCreateNewReferred);
+referralsRouter.get("/referred/:id", httpGetReferredById);
+referralsRouter.post("/referred", httpGetReferredByCampaign);
+referralsRouter.post("/referred/create", httpCreateNewReferred);
 
 export default referralsRouter;

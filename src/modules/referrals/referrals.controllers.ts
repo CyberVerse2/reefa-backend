@@ -1,99 +1,97 @@
-import catchAsync from 'express-async-handler';
+import { catchAsync } from 'src/common/utils/catchAsync';
 
 import {
   createNewReferrer,
-  getReferrers,
   getReferrerByCode,
-  getReferred,
   getReferredById,
-  createNewReferred
-} from './referrals.services ';
-import { AppError } from '../globals/utils/errors.util ';
+  createNewReferred,
+  getReferrersByCampaign,
+  getReferrerById,
+  getReferredByCampaigns
+} from './referrals.services';
+import AppError from 'src/common/utils/appError';
+import { AppResponse } from 'src/common/utils/appResponse';
 
-const httpGetReferrers = catchAsync(async (req, res) => {
+export const httpGetReferrersByCampaign = catchAsync(async (req, res) => {
   const { campaignId } = req.body;
   if (!campaignId) {
     throw new AppError('Provide a campaign Id');
   }
-  const referrers = await getReferrers(campaignId);
-  return res
-    .status(200)
-    .json({ message: 'Referrers retrieved successfully', data: referrers });
+  const referrers = await getReferrersByCampaign(campaignId);
+  if (!referrers) throw new AppError('Referrers with the campaign id not found', 400);
+  return AppResponse(res, 200, referrers, 'Referrers retrieved successfully');
 });
 
-const httpGetReferrerByCode = catchAsync(async (req, res) => {
+export const httpGetReferrerByCode = catchAsync(async (req, res) => {
   const { code } = req.params;
   console.log(code);
   if (!code) {
     throw new AppError('Provide a referral Code');
   }
   const referrersById = await getReferrerByCode(code);
-  return res.status(200).json({
-    message: 'Referrers based on referral code retrieved successfully',
-    data: referrersById
-  });
+  return AppResponse(
+    res,
+    200,
+    referrersById,
+    'Referrers based on referral code retrieved successfully'
+  );
 });
 
-const httpCreateNewReferrer = catchAsync(async (req, res) => {
-  const { campaignId, name, email } = req.body;
+export const httpGetReferrerById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  if (!id) {
+    throw new AppError('Provide a referral id');
+  }
+  const referrersById = await getReferrerById(id);
+  if (!referrersById) throw new AppError('Referred with the id not found', 404);
+
+  return AppResponse(
+    res,
+    200,
+    referrersById,
+    'Referrers based on referrer id retrieved successfully'
+  );
+});
+
+export const httpCreateNewReferrer = catchAsync(async (req, res) => {
+  const { campaignId, name, email, isTermsAndConditionAccepted } = req.body;
 
   if (!(name && email && campaignId)) {
     throw new AppError('name,email and campaignId required');
   }
-  const newReferrer = await createNewReferrer(campaignId, name, email);
-  return res
-    .status(200)
-    .json({ message: 'Registration Successful', data: newReferrer });
+  const newReferrer = await createNewReferrer(campaignId, name, email, isTermsAndConditionAccepted);
+  return AppResponse(res, 200, newReferrer, 'Registration Successful');
 });
 
-const httpGetReferred = catchAsync(async (req, res) => {
+export const httpGetReferredByCampaign = catchAsync(async (req, res) => {
   const { campaignId } = req.body;
   if (!campaignId) {
     throw new AppError('Campaign Id required');
   }
-  const referred = await getReferred(campaignId);
+  const referred = await getReferredByCampaigns(campaignId);
+  if (!referred) throw new AppError('Referred with the id not found', 400);
 
-  return res.status(200).json({
-    message: 'Referred of campaignId retrieved successfully',
-    data: referred
-  });
+  return AppResponse(res, 200, referred, 'Referred of campaignId retrieved successfully');
 });
 
-const httpGetReferredById = catchAsync(async (req, res) => {
+export const httpGetReferredById = catchAsync(async (req, res) => {
   const { id } = req.params;
   if (!id) {
     throw new AppError('Referred Id required');
   }
   const referred = await getReferredById(id);
+  if (!referred) throw new AppError('Referred with the id not found', 404);
 
-  return res
-    .status(200)
-    .json({ message: 'Referred retrieved successfully', data: referred });
+
+  return AppResponse(res, 200, referred, 'Referred retrieved successfully');
 });
 
-const httpCreateNewReferred = catchAsync(async (req, res) => {
+export const httpCreateNewReferred = catchAsync(async (req, res) => {
   const { campaignId, referralCode, name, email, amount } = req.body;
   if (!(name && email && campaignId && amount)) {
     throw new AppError('name and email required');
   }
-  const newReferred = await createNewReferred(
-    campaignId,
-    name,
-    email,
-    amount,
-    referralCode
-  );
-  return res.status(200).json({
-    message: 'Registration of referred Successful',
-    data: newReferred
-  });
+  const newReferred = await createNewReferred(campaignId, name, email, amount, referralCode);
+  return AppResponse(res, 201, newReferred, 'Registration of referred Successful');
 });
-
-export {
-  httpCreateNewReferrer,
-  httpGetReferrers,
-  httpGetReferrerByCode,
-  httpGetReferred,
-  httpGetReferredById,
-  httpCreateNewReferred
-};
