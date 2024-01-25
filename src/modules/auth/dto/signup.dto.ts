@@ -5,9 +5,10 @@ import { LoginDto } from "./login.dto";
 export class SignupDto extends LoginDto {
   constructor(body: any) {
     super(body);
+    this.assignBody()
   }
 
   @IsNotEmpty()
-  @IsBoolean({ message: "The terms and conditions is required" })
+  @IsBoolean({ message: 'The terms and conditions is required' })
   isTermsAndConditionAccepted!: boolean;
 }

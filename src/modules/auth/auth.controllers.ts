@@ -13,7 +13,7 @@ import { LoginDto } from "./dto/login.dto";
 export const httpCreateNewUser = catchAsync(
   async (req: Request, res: Response) => {
     const { email, password, isTermsAndConditionAccepted } = req.body;
-    await validateEntity(new SignupDto(req.body));
+    await validateEntity(new SignupDto({ email, password, isTermsAndConditionAccepted }));
     if (!(email && password && isTermsAndConditionAccepted)) {
       throw new AppError("Please provide the required fields", 400);
     }
