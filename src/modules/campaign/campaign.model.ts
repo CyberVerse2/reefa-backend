@@ -9,21 +9,21 @@ import {
   JoinColumn,
   ManyToMany,
   OneToMany,
-  JoinTable
-} from 'typeorm';
+  JoinTable,
+} from "typeorm";
 import {
   IsEmail,
   IsFQDN,
   IsNotEmpty,
   MinLength,
   MaxLength,
-  IsEnum
-} from 'class-validator';
-import { RewardType, BusinessCategory } from './campaigns.constants';
-import { User } from '../user/user.model';
-import { Referrer } from '../referrals/models/referrer.model';
-import { Referred } from '../referrals/models/referred.model';
-import { randomBytes } from 'crypto';
+  IsEnum,
+} from "class-validator";
+import { RewardType, BusinessCategory } from "./campaigns.constants";
+import { User } from "../user/user.model";
+import { Referrer } from "../referrals/models/referrer.model";
+import { Referred } from "../referrals/models/referred.model";
+import { randomBytes } from "crypto";
 
 @Entity()
 export class Campaign {
@@ -31,41 +31,41 @@ export class Campaign {
   id!: string;
 
   @ManyToOne(() => User, (user) => user.campaigns)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: "userId" })
   userId!: User;
 
   @Column({ unique: true })
   @IsNotEmpty()
   @MinLength(7, {
-    message: 'A campaign name should have a minimum of 7 characters'
+    message: "A campaign name should have a minimum of 7 characters",
   })
   name!: string;
 
   @Column({ unique: true })
   @IsNotEmpty()
   @MaxLength(255, {
-    message: 'A campaign description should have a maximum of 255 characters'
+    message: "A campaign description should have a maximum of 255 characters",
   })
   description!: string;
 
   @Column({ nullable: true })
   photo?: string;
 
-  @IsEnum(BusinessCategory, { message: 'Invalid category' })
+  @IsEnum(BusinessCategory, { message: "Invalid category" })
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: BusinessCategory,
-    default: BusinessCategory.Other
+    default: BusinessCategory.Other,
   })
   category!: BusinessCategory;
 
-  @Column({ type: 'enum', enum: RewardType, default: RewardType.CASH })
-  @IsEnum(RewardType, { message: 'Invalid reward type' })
-  @IsNotEmpty({ message: 'Please input a reward type' })
+  @Column({ type: "enum", enum: RewardType, default: RewardType.CASH })
+  @IsEnum(RewardType, { message: "Invalid reward type" })
+  @IsNotEmpty({ message: "Please input a reward type" })
   reward!: RewardType;
 
   @Column()
-  @MinLength(10, { message: 'The reward should be at least N10' })
+  @MinLength(10, { message: "The reward should be at least N10" })
   rewardAmount!: number;
 
   @ManyToMany(() => Referrer)
@@ -75,11 +75,11 @@ export class Campaign {
   @OneToMany(() => Referred, (referred) => referred.campaigns)
   referred!: Referred[];
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   @IsFQDN()
   campaignLink!: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   @IsFQDN()
   paymentLink!: string;
 
@@ -91,6 +91,6 @@ export class Campaign {
 
   @BeforeInsert()
   generateId() {
-    this.id = randomBytes(10).toString('hex');
+    this.id = randomBytes(10).toString("hex");
   }
 }

@@ -35,7 +35,6 @@ app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.disable("x-powered-by");
 const timeoutMiddleware = timeout(60000);
-// app.use(compression);
 
 const limiter = rateLimit({
   windowMs: 60 * 1000 * 15, // 15 minutes

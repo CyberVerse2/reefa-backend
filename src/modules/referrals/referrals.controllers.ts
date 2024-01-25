@@ -11,6 +11,8 @@ import {
 } from './referrals.services';
 import AppError from 'src/common/utils/appError';
 import { AppResponse } from 'src/common/utils/appResponse';
+import { Referrer } from './models/referrer.model';
+import { Campaign } from '../campaign/campaign.model';
 
 export const httpGetReferrersByCampaign = catchAsync(async (req, res) => {
   const { campaignId } = req.body;
@@ -60,6 +62,7 @@ export const httpCreateNewReferrer = catchAsync(async (req, res) => {
   if (!(name && email && campaignId)) {
     throw new AppError('name,email and campaignId required');
   }
+
   const newReferrer = await createNewReferrer(campaignId, name, email, isTermsAndConditionAccepted);
   return AppResponse(res, 200, newReferrer, 'Registration Successful');
 });
@@ -82,7 +85,6 @@ export const httpGetReferredById = catchAsync(async (req, res) => {
   }
   const referred = await getReferredById(id);
   if (!referred) throw new AppError('Referred with the id not found', 404);
-
 
   return AppResponse(res, 200, referred, 'Referred retrieved successfully');
 });

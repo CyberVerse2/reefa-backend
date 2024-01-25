@@ -5,18 +5,18 @@ import {
   CreateDateColumn,
   BeforeInsert,
   OneToMany,
-  BeforeUpdate
-} from 'typeorm';
+  BeforeUpdate,
+} from "typeorm";
 import {
   IsEmail,
   IsFQDN,
   IsNotEmpty,
   MinLength,
-  ValidateIf
-} from 'class-validator';
-import { hash } from 'bcrypt';
-import { Campaign } from '../campaign/campaign.model';
-import { BaseUser } from '../../common/abstract/base-user.model';
+  ValidateIf,
+} from "class-validator";
+import { hash } from "bcrypt";
+import { Campaign } from "../campaign/campaign.model";
+import { BaseUser } from "../../common/abstract/base-user.model";
 
 @Entity()
 export class User extends BaseUser {
@@ -47,7 +47,7 @@ export class User extends BaseUser {
   @Column({ default: false })
   isDeleted!: boolean;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => "CURRENT_TIMESTAMP" })
   lastLogin!: Date;
 
   @BeforeInsert()

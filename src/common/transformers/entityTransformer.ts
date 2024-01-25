@@ -1,4 +1,4 @@
 export function EntityTransformer(user) {
-  delete user['password'];
+  delete user["password"];
   return user;
 }

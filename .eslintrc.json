@@ -5,7 +5,11 @@
     "sourceType": "module"
   },
   "plugins": ["security"],
-  "extends": ["eslint:recommended", "prettier", "plugin:security/recommended-legacy"],
+  "extends": [
+    "eslint:recommended",
+    "prettier",
+    "plugin:security/recommended-legacy"
+  ],
   "env": {
     "es2021": true,
     "node": true

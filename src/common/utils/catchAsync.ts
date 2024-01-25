@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 /**
  * Wraps an async function to handle errors.
  *
@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 type CatchAsyncFunction = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => Promise<Response | void>;
 
 export const catchAsync = (fn: CatchAsyncFunction) => {

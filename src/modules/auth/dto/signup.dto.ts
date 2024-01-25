@@ -1,6 +1,6 @@
 // dto
-import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { LoginDto } from './login.dto';
+import { IsBoolean, IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { LoginDto } from "./login.dto";
 
 export class SignupDto extends LoginDto {
   constructor(body: any) {
@@ -8,6 +8,6 @@ export class SignupDto extends LoginDto {
   }
 
   @IsNotEmpty()
-  @IsBoolean({ message: 'The terms and conditions is required' })
+  @IsBoolean({ message: "The terms and conditions is required" })
   isTermsAndConditionAccepted!: boolean;
 }

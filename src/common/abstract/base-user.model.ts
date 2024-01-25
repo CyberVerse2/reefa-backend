@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { IsEmail } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { IsEmail } from "class-validator";
 
 @Entity()
 export abstract class BaseUser {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id!: string;
 
   @Column({ nullable: true })

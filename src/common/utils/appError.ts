@@ -1,4 +1,4 @@
-import { CustomError } from 'ts-custom-error';
+import { CustomError } from "ts-custom-error";
 
 export default class AppError extends CustomError {
   statusCode: number;
@@ -11,7 +11,7 @@ export default class AppError extends CustomError {
     // Object.setPrototypeOf(this, AppError.prototype);
 
     this.statusCode = statusCode;
-    this.status = `${statusCode}`.startsWith('5') ? 'Failed' : 'Error';
+    this.status = `${statusCode}`.startsWith("5") ? "Failed" : "Error";
     this.isOperational = true;
     this.data = data;
 

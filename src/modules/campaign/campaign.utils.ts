@@ -1,31 +1,30 @@
-import axios from 'axios';
-import { findUser } from '../user/user.services';
-// import { decryptData } from '../globals/utils/encryptData.utils ';
+import axios from "axios";
+import { findUser } from "../user/user.services";
 
 async function createPaymentLink(userId: string, name) {
-  const currentUser = await findUser(userId, 'id');
+  const currentUser = await findUser(userId, "id");
   const blocSecretKeyHash = currentUser?.bloc_secret_key;
   const blocSecretKey = await decryptData(blocSecretKeyHash);
   let data = JSON.stringify({
     name: name,
     custom_fields: [
       {
-        display_name: 'Referral Code',
-        variable_name: 'Referral code'
-      }
-    ]
+        display_name: "Referral Code",
+        variable_name: "Referral code",
+      },
+    ],
   });
 
   let config = {
-    method: 'post',
+    method: "post",
     maxBodyLength: Infinity,
-    url: 'https://api.bloc.co/page',
+    url: "https://api.bloc.co/page",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${blocSecretKey}`
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${blocSecretKey}`,
     },
-    data: data
+    data: data,
   };
 
   const response = await axios(config);

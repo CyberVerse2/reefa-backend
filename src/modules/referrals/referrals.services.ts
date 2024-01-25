@@ -1,5 +1,3 @@
-import { generate, charset as _charset } from 'referral-codes';
-
 import { getCheckoutLink } from './referrals.utils';
 import { getCampaignById } from '../campaign/campaign.services';
 import { Reefa } from 'src/common/configs/db';
@@ -7,7 +5,6 @@ import { Referrer } from './models/referrer.model';
 import { ReferrerCampaignStats } from './models/referrer-campaign-stats.model';
 import AppError from 'src/common/utils/appError';
 import { Referred } from './models/referred.model';
-import { DeepPartial } from 'typeorm';
 import { Campaign } from '../campaign/campaign.model';
 import generateReferralCode from 'src/common/utils/generateReferralCodes';
 
@@ -40,15 +37,19 @@ export async function getReferredById(id: string): Promise<Referred | null> {
   const referred = await referredRepository.findOneBy({ id });
   return referred;
 }
-interface NewReferrer extends Referrer {
-  campaignId: Campaign['id'];
+
+interface ref {
+  campaignId: string;
+  username: string;
+  email: string;
+  isTermsAndConditionAccepted: boolean;
 }
-export async function createNewReferrer({
-  campaignId,
-  username,
-  email,
-  isTermsAndConditionAccepted
-}: DeepPartial<NewReferrer>): Promise<Referrer> {
+export async function createNewReferrer(
+  campaignId: string,
+  username: string,
+  email: string,
+  isTermsAndConditionAccepted: boolean
+): Promise<Referrer> {
   const campaign = await getCampaignById(campaignId as string);
   if (!campaign) throw new AppError('Campaign not found', 404);
   const referrerRepository = Reefa.getRepository(Referrer);
@@ -75,13 +76,13 @@ interface NewReferred extends Referred {
   campaignId?: Campaign['id'];
   checkoutLink?: string;
 }
-export async function createNewReferred({
-  campaignId,
-  username,
-  email,
-  productPrice,
-  isTermsAndConditionAccepted
-}: DeepPartial<NewReferred>): Promise<NewReferred> {
+export async function createNewReferred(
+  campaignId: string,
+  username: string,
+  email: string,
+  productPrice: number,
+  isTermsAndConditionAccepted: boolean
+): Promise<NewReferred> {
   const currentCampaign = await getCampaignById(campaignId!);
   const referredRepository = Reefa.getRepository(Referred);
   const newReferred = referredRepository.create({
