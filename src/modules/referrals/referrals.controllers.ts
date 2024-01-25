@@ -1,4 +1,4 @@
-import { catchAsync } from 'src/common/utils/catchAsync';
+import { catchAsync } from '../../common/utils/catchAsync';
 
 import {
   createNewReferrer,
@@ -9,8 +9,8 @@ import {
   getReferrerById,
   getReferredByCampaigns
 } from './referrals.services';
-import AppError from 'src/common/utils/appError';
-import { AppResponse } from 'src/common/utils/appResponse';
+import AppError from '../../common/utils/appError';
+import { AppResponse } from '../../common/utils/appResponse';
 import { Referrer } from './models/referrer.model';
 import { Campaign } from '../campaign/campaign.model';
 
@@ -31,13 +31,8 @@ export const httpGetReferrerByCode = catchAsync(async (req, res) => {
     throw new AppError('Provide a referral Code');
   }
   const referrerStatsByCode = await getReferrerStatsByCode(code);
-  const referrer = referrerStatsByCode.user
-  return AppResponse(
-    res,
-    200,
-    referrer,
-    'Referrers based on referral code retrieved successfully'
-  );
+  const referrer = referrerStatsByCode.user;
+  return AppResponse(res, 200, referrer, 'Referrers based on referral code retrieved successfully');
 });
 
 export const httpGetReferrerById = catchAsync(async (req, res) => {
@@ -95,6 +90,13 @@ export const httpCreateNewReferred = catchAsync(async (req, res) => {
   if (!(name && email && campaignId && amount)) {
     throw new AppError('name and email required');
   }
-  const newReferred = await createNewReferred(campaignId, name, email, amount, referralCode,isTermsAndConditionAccepted);
+  const newReferred = await createNewReferred(
+    campaignId,
+    name,
+    email,
+    amount,
+    referralCode,
+    isTermsAndConditionAccepted
+  );
   return AppResponse(res, 201, newReferred, 'Registration of referred Successful');
 });

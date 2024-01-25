@@ -1,6 +1,6 @@
 // dto
-import { IsBoolean, IsEmail, IsNotEmpty, IsString } from "class-validator";
-import { BaseDto } from "src/common/dto/base.dto";
+import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { BaseDto } from '../../common/dto/base.dto';
 
 export class SignupDto extends BaseDto {
   constructor(body: any) {

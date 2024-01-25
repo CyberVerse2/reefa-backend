@@ -1,19 +1,19 @@
-import axios from "axios";
-import { findUser } from "../user/user.services";
-import AppError from "src/common/utils/appError";
-import { ENVIRONMENT } from "src/common/configs/environment";
+import axios from 'axios';
+import { findUser } from '../user/user.services';
+import AppError from '../../common/utils/appError';
+import { ENVIRONMENT } from '../../common/configs/environment';
 
 async function getCheckoutLink(body: any) {
   const data = JSON.stringify(body);
   let config = {
-    method: "post",
+    method: 'post',
     maxBodyLength: Infinity,
-    url: "https://api.blochq.io/v1/checkout/new",
+    url: 'https://api.blochq.io/v1/checkout/new',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${ENVIRONMENT.BLOC.LIVE.PUBLIC_KEY}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${ENVIRONMENT.BLOC.LIVE.PUBLIC_KEY}`
     },
-    data: data,
+    data: data
   };
 
   try {

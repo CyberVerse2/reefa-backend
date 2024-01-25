@@ -1,12 +1,12 @@
 import { getCheckoutLink } from './referrals.utils';
 import { getCampaignById } from '../campaign/campaign.services';
-import { Reefa } from 'src/common/configs/db';
+import { Reefa } from '../../common/configs/db';
 import { Referrer } from './models/referrer.model';
 import { ReferrerCampaignStats } from './models/referrer-campaign-stats.model';
-import AppError from 'src/common/utils/appError';
+import AppError from '../../common/utils/appError';
 import { Referred } from './models/referred.model';
 import { Campaign } from '../campaign/campaign.model';
-import generateReferralCode from 'src/common/utils/generateReferralCodes';
+import generateReferralCode from '../../common/utils/generateReferralCodes';
 import { Referral } from './models/referral.model';
 
 export async function getReferrersByCampaign(id: string) {

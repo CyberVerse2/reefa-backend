@@ -1,12 +1,12 @@
-import { catchAsync } from "src/common/utils/catchAsync";
+import { catchAsync } from "../../common/utils/catchAsync";
 import AppError from "../../common/utils/appError";
 import { createNewUser, loginUser } from "./auth.services";
 import { updateUser } from "../user/user.services";
 import { Request, Response } from "express";
 import { AppResponse } from "../../common/utils/appResponse";
-import { setCookie, signData, validateEntity } from "src/common/utils/helper";
-import { ENVIRONMENT } from "src/common/configs/environment";
-import { EntityTransformer } from "src/common/transformers/entityTransformer";
+import { setCookie, signData, validateEntity } from "../../common/utils/helper";
+import { ENVIRONMENT } from "../../common/configs/environment";
+import { EntityTransformer } from "../../common/transformers/entityTransformer";
 import { SignupDto } from "./dto/signup.dto";
 import { LoginDto } from "./dto/login.dto";
 

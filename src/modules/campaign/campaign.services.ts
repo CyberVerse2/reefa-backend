@@ -1,11 +1,10 @@
-import axios from "axios";
-import { Campaign } from "./campaign.model";
-import { Reefa } from "src/common/configs/db";
-import { findUser } from "../user/user.services";
-import AppError from "src/common/utils/appError";
-import { BusinessCategory, RewardType } from "./campaigns.constants";
-import { DeepPartial, UpdateResult } from "typeorm";
-
+import axios from 'axios';
+import { Campaign } from './campaign.model';
+import { Reefa } from '../../common/configs/db';
+import { findUser } from '../user/user.services';
+import AppError from '../../common/utils/appError';
+import { BusinessCategory, RewardType } from './campaigns.constants';
+import { DeepPartial, UpdateResult } from 'typeorm';
 
 export async function getCampaignById(id: string): Promise<Campaign> {
   const campaignRepository = Reefa.getRepository(Campaign);
@@ -19,11 +18,10 @@ export async function createCampaign({
   description,
   category,
   reward,
-  rewardAmount,
+  rewardAmount
 }: DeepPartial<Campaign>): Promise<Campaign> {
-  const currentUser = await findUser(<string>userId, "id");
-  if (!currentUser)
-    throw new AppError(`This user creating the campaign doesn't exist`);
+  const currentUser = await findUser(<string>userId, 'id');
+  if (!currentUser) throw new AppError(`This user creating the campaign doesn't exist`);
 
   const CampaignRepository = Reefa.getRepository(Campaign);
   const newCampaign = CampaignRepository.create({
@@ -32,23 +30,21 @@ export async function createCampaign({
     description,
     category,
     reward,
-    rewardAmount,
+    rewardAmount
   });
   await CampaignRepository.save(newCampaign);
-  if (!newCampaign)
-    throw new AppError("Error in creating campaign. Please try again", 400);
+  if (!newCampaign) throw new AppError('Error in creating campaign. Please try again', 400);
 
   return newCampaign;
 }
 
 export async function updateCampaign(
   id: string,
-  details: DeepPartial<Campaign>,
+  details: DeepPartial<Campaign>
 ): Promise<UpdateResult> {
   const CampaignRepository = Reefa.getRepository(Campaign);
   const updatedCampaign = await CampaignRepository.update({ id }, details);
-  if (!updatedCampaign)
-    throw new AppError("Error in updating campaign. Please try again", 400);
+  if (!updatedCampaign) throw new AppError('Error in updating campaign. Please try again', 400);
   return updatedCampaign;
 }
 
@@ -57,9 +53,9 @@ export async function deleteCampaign(id: string) {
   const deletedCampaign = await CampaignRepository.update(
     { id },
     {
-      isDeleted: true,
-    },
+      isDeleted: true
+    }
   );
-  if (!deletedCampaign) throw new AppError("Error in deleting campaign", 400);
+  if (!deletedCampaign) throw new AppError('Error in deleting campaign', 400);
   return deletedCampaign;
 }

@@ -1,7 +1,7 @@
 import AppError from "./../../common/utils/appError";
 import { Reefa } from "../../common/configs/db";
 import { User } from "../user/user.model";
-import { compareData } from "src/common/utils/helper";
+import { compareData } from "../../common/utils/helper";
 
 export async function findUser(
   value: string,
