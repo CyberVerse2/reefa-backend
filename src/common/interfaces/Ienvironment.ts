@@ -36,6 +36,7 @@ export interface IEnvironment {
     LIVE: {
       SECRET_KEY: string;
       PUBLIC_KEY: string;
+      WEBHOOK: string
     };
   };
   AWS?: {

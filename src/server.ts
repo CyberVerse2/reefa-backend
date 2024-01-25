@@ -88,7 +88,7 @@ app.post(
   '/webhooks',
   catchAsync(async (req: Request, res: Response) => {
     const hash = crypto
-      .createHmac('sha512', ENVIRONMENT.DB.URL)
+      .createHmac('sha512', ENVIRONMENT.BLOC.LIVE.WEBHOOK)
       .update(JSON.stringify(req.body))
       .digest('hex');
     console.log(req.headers['X-Bloc-Webhook']);

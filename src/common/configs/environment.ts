@@ -29,7 +29,8 @@ export const ENVIRONMENT: IEnvironment = {
     },
     LIVE: {
       SECRET_KEY: process.env.BLOC_LIVE_SECRET_KEY!,
-      PUBLIC_KEY: process.env.BLOC_LIVE_PUBLIC_KEY!
+      PUBLIC_KEY: process.env.BLOC_LIVE_PUBLIC_KEY!,
+      WEBHOOK: process.env.BLOC_LIVE_WEBHOOK_URL!
     }
   },
   CACHE_REDIS: {
