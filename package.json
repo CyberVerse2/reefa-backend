@@ -44,7 +44,7 @@
     "tsconfig-paths": "^3.14.1",
     "typeorm": "^0.3.19",
     "uuid": "^9.0.1",
-    "winston": "^3.10.0"
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
